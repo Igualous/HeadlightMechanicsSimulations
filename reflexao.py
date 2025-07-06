@@ -25,7 +25,7 @@ class ReflexaoMatricial(Scene):
             [0, -1]
         ])
 
-        vetor_original = Vector([3, 3], color=PURPLE)
+        vetor_original = Vector([3, 2], color=PURPLE)
         rotulo_original = MathTex("v").next_to(vetor_original.get_end(), UR)
 
         vetor_transformado = Vector(M @ np.array([3, 2]), color=TEAL)
