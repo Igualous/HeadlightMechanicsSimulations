@@ -17,7 +17,7 @@ class RotacaoMatricial(Scene):
         self.wait(1)
 
         # --- Matriz de Rotação ---
-        ANGULO = 30
+        ANGULO = -30
 
         template_string = (
             "R_{VALOR^\\circ} = "
@@ -70,10 +70,13 @@ class RotacaoMatricial(Scene):
         grupo_angulo_volante = VGroup(arco_volante, rotulo_theta_volante)
         VGroup(grupo_volante, grupo_angulo_volante).to_corner(DL, buff=0.7)
 
-        # --- Animação da seta para esquerda
-        arrow_left = Arrow([-3, -3, 0], [-4, -3, 0], buff=0, color=YELLOW)    
-        self.add(arrow_left)
-        self.play(GrowArrow(arrow_left))
+        # --- Animação da seta para esquerda/direita
+        if (ANGULO > 0):
+            arrow = Arrow([-3, -3, 0], [-4, -3, 0], buff=0, color=YELLOW) 
+        else:
+            arrow = Arrow([-4, -3, 0], [-3, -3, 0], buff=0, color=YELLOW)    
+        self.add(arrow)
+        self.play(GrowArrow(arrow))
         self.wait(1)
         self.add(grupo_volante)
         self.wait(1)
