@@ -17,11 +17,23 @@ class RotacaoMatricial(Scene):
         self.wait(1)
 
         # --- Matriz de Rotação ---
-        ANGULO = 76
+        ANGULO = 30
 
-        string = ("R(ANGULO) = cos(ANGULO)  -sin(ANGULO) \n             sin(ANGULO)  cos(ANGULO)")
-        string_final = string.replace("ANGULO", str(ANGULO))
-        matriz_tex = Text(string_final, font_size=24).to_corner(UL).shift(DOWN*0.8)
+        template_string = (
+            "R_{VALOR^\\circ} = "
+            "\\begin{bmatrix} "
+            "\\cos{VALOR^\\circ} & -\\sin{VALOR^\\circ} \\\\ "
+            "\\sin{VALOR^\\circ} &  \\cos{VALOR^\\circ} "
+            "\\end{bmatrix}"
+        )
+
+        # 2. Substitua o marcador "VALOR" pelo conteúdo da sua variável ANGULO.
+        string_final = template_string.replace("VALOR", str(ANGULO))
+
+        # 3. Use MathTex para renderizar a string LaTeX.
+        matriz_tex = MathTex(string_final).to_corner(UL).shift(DOWN * 0.8)
+
+        # Animação para exibir a matriz na tela
         self.play(Write(matriz_tex))
 
         # --- Objeto a ser Rotacionado: Parábola ---
