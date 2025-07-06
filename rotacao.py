@@ -1,123 +1,80 @@
 from manim import *
-import numpy as np
+from numpy import *
 
-class ReflexaoMatricial(Scene):
-    def construct(self):
-        eixos = Axes(
-            x_range=[-5, 5, 2],
-            y_range=[-4, 4, 1],
-            axis_config={"include_tip": False}
-        ).add_coordinates()
-        
-        titulo_matriz = Text("Reflexão através do eixo X", font_size=32).to_edge(UP)
-        self.play(Create(eixos))
-        self.play(Write(titulo_matriz))
-        self.wait(1)
-
-        matriz_tex = MathTex(
-            "M = \\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
-        ).to_corner(UL).shift(DOWN*0.8) # Afasta do título
-        self.play(Write(matriz_tex))
-
-        # Matriz de reflexão
-        M = np.array([
-            [1, 0],
-            [0, -1]
-        ])
-
-        vetor_original = Vector([3, 3], color=PURPLE)
-        rotulo_original = MathTex("v").next_to(vetor_original.get_end(), UR)
-
-        vetor_transformado = Vector(M @ np.array([3, 2]), color=TEAL)
-        rotulo_transformado = MathTex("Mv").next_to(vetor_transformado.get_end(), DR)
-
-        self.play(
-            GrowArrow(vetor_original),
-            Write(rotulo_original)
-        )
-        self.wait(1)
-        self.play(
-            Transform(vetor_original.copy(), vetor_transformado),
-            Write(rotulo_transformado)
-        )
-        self.wait(2)
-
-        explicacao = Text(
-            "Um vetor no eixo x não muda de direção.\nEle é um autovetor!",
-            font_size=28
-        ).to_corner(DL)
-        
-        autovetor = Vector([4, 0], color=ORANGE)
-        rotulo_autovetor = MathTex("v_1", color=ORANGE).next_to(autovetor.get_end(), UP)
-      
-        autovetor_transformado = Vector(M @ np.array([4, 0]), color="RED")
-        rotulo_autovetor_transformado = MathTex("Mv_1", color=RED).next_to(autovetor_transformado.get_end(), DR)
-        
-        self.play(Write(explicacao))
-        self.play(GrowArrow(autovetor), Write(rotulo_autovetor))
-        self.wait(1)
-        self.play(GrowArrow(autovetor_transformado), Write(rotulo_autovetor_transformado))
-        self.wait(3)
-
-
-# CENA 3: Focada na Álgebra Linear - Rotação
+# CENA 3: Focada na Álgebra Linear - Rotação (MODIFICADA)
 class RotacaoMatricial(Scene):
     def construct(self):
         # --- Configuração Inicial ---
         eixos = Axes(
             x_range=[-5, 5, 1],
-            y_range=[-4, 4, 1],
+            y_range=[-3, 5, 1], # Ajustado o y_range para a parábola
             axis_config={"include_tip": False}
         ).add_coordinates()
         
-        # CORREÇÃO FINAL: Usar MathTex com espaços explícitos (\\ )
-        titulo_rotacao = MathTex("Rotacao\\ por\\ um\\ angulo\\ \\theta", font_size=42).to_edge(UP)
+        titulo_rotacao = Text("Adaptive Frontlight System (AFS) Simulation", font_size=34).to_edge(UP)
         self.play(Create(eixos))
         self.play(Write(titulo_rotacao))
         self.wait(1)
 
         # --- Matriz de Rotação ---
-        matriz_tex = MathTex(
-            "R_\\theta = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix}"
-        ).to_corner(UL).shift(DOWN*0.8)
+        ANGULO = 76
+
+        string = ("R(ANGULO) = cos(ANGULO)  -sin(ANGULO) \n             sin(ANGULO)  cos(ANGULO)")
+        string_final = string.replace("ANGULO", str(ANGULO))
+        matriz_tex = Text(string_final, font_size=24).to_corner(UL).shift(DOWN*0.8)
         self.play(Write(matriz_tex))
 
-        # --- Vetor e sua Rotação ---
-        angulo_rotacao = 60 * DEGREES
-        vetor_original = Vector([3, 1], color=PURPLE)
-        rotulo_original = MathTex("v").next_to(vetor_original.get_end(), UR)
+        # --- Objeto a ser Rotacionado: Parábola ---
 
-        # Cria um arco para visualizar a rotação
-        arco = Arc(
-            radius=0.8,
-            start_angle=vetor_original.get_angle(),
-            angle=angulo_rotacao,
-            color=YELLOW
-        )
+        angulo_rotacao = ANGULO * DEGREES
         
-        rotulo_angulo = MathTex("\\theta").move_to(
-            arco.point_from_proportion(0.5) * 1.3
+        # --- ALTERAÇÃO: Substituindo o Vetor por uma Parábola ---
+        parabola = eixos.plot(
+            lambda x: 0.9 * x**2, # Equação da parábola y = 0.3x^2
+            x_range=[-1.5, 1.5],
+            color=PURPLE
         )
-
-        self.play(
-            GrowArrow(vetor_original),
-            Write(rotulo_original)
-        )
+        # O rótulo 'v' e o arco do vetor foram removidos pois não se aplicam diretamente a uma função
+        
+        self.play(Create(parabola))
         self.wait(1)
 
-        # Anima a rotação do vetor
-        self.play(
-            Rotate(vetor_original, angle=angulo_rotacao, about_point=ORIGIN),
-            Create(arco),
-            Write(rotulo_angulo)
-        )
-        self.wait(2)
-
-        # --- Explicação de Autovetores ---
-        explicacao = Text(
-            "Toda direção é alterada.\nLogo, não há autovetores reais!",
-            font_size=32
-        ).to_corner(DL)
+        # --- Animação do Volante ---
+        raio_circulo = 0.8
+        circulo = Circle(radius=raio_circulo, color=WHITE)
+        ponto = Dot(radius=0.07, color=YELLOW)
+        ponto.move_to(circulo.point_at_angle(0))
+        linha_raio = Line(circulo.get_center(), ponto.get_center(), color=BLUE)
         
-        self.play(Write(explicacao))
+        arco_volante = Arc(
+            radius=raio_circulo * 0.4,
+            start_angle=ponto.get_angle(),
+            angle=angulo_rotacao,
+            color=ORANGE
+        )
+        rotulo_theta_volante = MathTex("\\theta", color=ORANGE).scale(0.7).next_to(arco_volante, RIGHT, buff=0.1)
+
+        grupo_volante = VGroup(circulo, ponto, linha_raio)
+        grupo_angulo_volante = VGroup(arco_volante, rotulo_theta_volante)
+        VGroup(grupo_volante, grupo_angulo_volante).to_corner(DL, buff=0.7)
+
+        # --- Animação da seta para esquerda
+        arrow_left = Arrow([-3, -3, 0], [-4, -3, 0], buff=0, color=YELLOW)    
+        self.add(arrow_left)
+        self.play(GrowArrow(arrow_left))
+        self.wait(1)
+        self.add(grupo_volante)
+        self.wait(1)
+        
+        # --- ANIMAÇÃO SINCRONIZADA ---
+        self.play(
+            # 1. Rotação da PARÁBOLA
+            Rotate(parabola, angle=angulo_rotacao, about_point=parabola.get_bottom()),
+            # 2. Rotação do volante
+            Rotate(grupo_volante, angle=angulo_rotacao, about_point=circulo.get_center()),
+            # 3. Criação do arco e rótulo do volante
+            Create(grupo_angulo_volante),
+            run_time=2
+        )
+        
         self.wait(3)
