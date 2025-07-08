@@ -15,7 +15,7 @@ class ReflexaoMatricial(Scene):
         self.wait(1)
 
         matriz_tex = MathTex(
-            "M = \\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
+            "T = \\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
         ).to_corner(UL).shift(DOWN*0.8) # Afasta do título
         self.play(Write(matriz_tex))
 
@@ -29,7 +29,7 @@ class ReflexaoMatricial(Scene):
         rotulo_original = MathTex("v").next_to(vetor_original.get_end(), UR)
 
         vetor_transformado = Vector(M @ np.array([3, 2]), color=TEAL)
-        rotulo_transformado = MathTex("Mv").next_to(vetor_transformado.get_end(), DR)
+        rotulo_transformado = MathTex("T(v)").next_to(vetor_transformado.get_end(), DR)
 
         self.play(
             GrowArrow(vetor_original),
@@ -48,13 +48,20 @@ class ReflexaoMatricial(Scene):
         ).to_corner(DL)
         
         autovetor = Vector([4, 0], color=ORANGE)
-        rotulo_autovetor = MathTex("v_1", color=ORANGE).next_to(autovetor.get_end(), UP)
+        rotulo_autovetor = MathTex("u", color=ORANGE).next_to(autovetor.get_end(), UP)
       
         autovetor_transformado = Vector(M @ np.array([4, 0]), color="RED")
-        rotulo_autovetor_transformado = MathTex("Mv_1", color=RED).next_to(autovetor_transformado.get_end(), DR)
+        rotulo_autovetor_transformado = MathTex("T(u)", color=RED).next_to(autovetor_transformado.get_end(), DR)
         
-        self.play(Write(explicacao))
+        #self.play(Write(explicacao))
         self.play(GrowArrow(autovetor), Write(rotulo_autovetor))
         self.wait(1)
         self.play(GrowArrow(autovetor_transformado), Write(rotulo_autovetor_transformado))
+        
+        explicacao2 = Text(
+            "Existe um λ ∈ R tal que T(u) = λu\nEle é um autovetor!",
+            font_size=28
+        ).to_corner(DL)
+        self.play(Write(explicacao2))
+
         self.wait(3)
