@@ -1,23 +1,22 @@
 from manim import *
-from numpy import *
-
-# CENA 3: Focada na Álgebra Linear - Rotação (MODIFICADA)
+from numpy import * 
 class RotacaoMatricial(Scene):
     def construct(self):
         # --- Configuração Inicial ---
         eixos = Axes(
             x_range=[-5, 5, 1],
-            y_range=[-3, 5, 1], # Ajustado o y_range para a parábola
+            y_range=[-3, 5, 1], 
             axis_config={"include_tip": False}
         ).add_coordinates()
         
-        titulo_rotacao = Text("Adaptive Frontlight System (AFS) Simulation", font_size=34).to_edge(UP)
+        titulo_rotacao = Text("Adaptive Frontlight System (AFS) Simulation", font_size=30).to_edge(UP)
         self.play(Create(eixos))
         self.play(Write(titulo_rotacao))
         self.wait(1)
 
         # --- Matriz de Rotação ---
-        ANGULO = -30
+        K = 1             # Constante de escala para transmissão do ângulo
+        ANGULO =  45 * K
 
         template_string = (
             "R_{VALOR^\\circ} = "
@@ -27,7 +26,6 @@ class RotacaoMatricial(Scene):
             "\\end{bmatrix}"
         )
 
-        # 2. Substitua o marcador "VALOR" pelo conteúdo da sua variável ANGULO.
         string_final = template_string.replace("VALOR", str(ANGULO))
 
         # 3. Use MathTex para renderizar a string LaTeX.
