@@ -8,3 +8,5 @@ The entire project was developed in Python, utilizing the Manim library for crea
 
 A tutorial for installing the Manim library can be found at the following link: https://youtu.be/Qf8H7AKWClE?si=TfsjBGyueFNYC6R5
 
+
+Authors: Igor Araújo Rodrigues, Alexandre Martins Soares e Luis Felipe Brito de Assis
